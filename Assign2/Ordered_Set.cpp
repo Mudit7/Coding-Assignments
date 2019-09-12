@@ -192,7 +192,7 @@ class AvlTree{
             nd->left = insert_rec(nd->left, key);
         }
               
-        else  
+        else  //assuming no duplicates
             nd->right = insert_rec(nd->right, key);  
       
         // update height of this node 
@@ -309,31 +309,23 @@ class AvlTree{
                 minDiff=__INT_MAX__;
                 break;
             }
-            case -1:
+            case 2:
             {
                 minDiff=-1*__INT_MAX__;
             }
         }
         while(temp!=NULL)
         {
-            if(temp->left && key<temp->key)
+            if(temp->left && key<=temp->key)
             {
                 temp=temp->left;
             }   
-            else if(temp->right && key>temp->key)
+            else if(temp->right && key>=temp->key)
             {
                 temp=temp->right;
             }
-            
-            else if(key==temp->key){
-                return 0;
+            else{// leaf
                 break;
-            }
-            else{ //leaf
-                if(abs(minDiff)>abs(temp->key - key))
-                    minDiff=temp->key-key;
-
-                return minDiff;
             }
             if(mode==0){
                 if(abs(minDiff)>abs(temp->key-key))
@@ -370,12 +362,8 @@ class AvlTree{
             return 1 +countZeroToN(nd->right,key);
         }
             
-        else{   //found element
-            if(nd->left)
-                return 1+nd->left->size;
-            else
-                return 1;
-            
+        else{
+            return 1;
         }
     }
     int countBetweenElements(int e1,int e2)
@@ -385,6 +373,7 @@ class AvlTree{
         // for calculating no. of elements between 0 and e1 and e2
         int c1=countZeroToN(root,e1);
         int c2=countZeroToN(root,e2);
+        cout<<"c1:"<<c1<<" c2:"<<c2<<endl;
         //result should be numbers between them , so..
         return c2-c1+1;
     }
@@ -460,9 +449,54 @@ class AvlTree{
     int countInRange(int low,int high)
     {
         int diff1= findMinDiff(low ,1);       //lower bound
-        int diff2= findMinDiff(high,-1);      //upper bound
+        int diff2= findMinDiff(high,-1);       //via +ve difference
         int val1=low+diff1;
         int val2=high+diff2;
         return countBetweenElements(val1,val2);
     }
 };
+
+class Ordered_Set{
+    AvlTree tree;
+
+    public:
+    void insert(int x)
+    {
+        if(tree.checkIfExists(x))
+        tree.add(x);
+        else
+        {
+            cout<<"Duplicate element, not adding";
+        }
+    }
+    void remove(int x)
+    {
+        tree.remove(x);
+    }
+    bool checkIfExists(int key)
+    {
+        return tree.checkIfExists(key);
+    }
+    int getClosest(int val)
+    {
+        return tree.getClosest(val);
+    }
+    int find_kth_largest(int k)
+    {
+        return tree.find_kth_largest(k);
+    }
+    int countInRange(int low,int high)
+    {
+        return tree.countInRange(low,high);
+    }
+
+};
+
+
+int main()
+{
+    Ordered_Set set;
+
+
+    return 0;
+}
