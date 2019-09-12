@@ -60,6 +60,8 @@ class AvlTree{
             // Update heights  
             setHeight(grand_parent); 
             setHeight(parent); 
+
+            //update sizes
             grand_parent->size-=parent->size;
             parent->size+=grand_parent->size;
         }
@@ -93,7 +95,6 @@ class AvlTree{
             setHeight(parent); 
 
             //update sizes
-
             grand_parent->size-=parent->size;
             parent->size+=grand_parent->size;
 
@@ -221,14 +222,22 @@ class AvlTree{
 
     node* delete_rec(node* nd,int key)
     {
-        if(nd==NULL)
-        return nd;
+        if(nd==NULL){
+            return nd;
+        }
+        
 
-        else if(nd->key > key)
-        nd->left= delete_rec(nd->left,key);
+        else if(nd->key > key){
+            nd->left= delete_rec(nd->left,key);
+            nd->size--;
+        }
+        
 
-        else if(nd->key < key)
-        nd->right= delete_rec(nd->right,key);
+        else if(nd->key < key){
+             nd->right= delete_rec(nd->right,key);
+             nd->size--;
+        }
+       
 
         else{// if equal
             //no child case
@@ -309,6 +318,9 @@ class AvlTree{
     //mode = 0 for -ve difference, mode = 1 for positive
     int findMinDiff(int key,int mode) 
     {   
+        if(root==NULL) 
+            return -1;
+
         node *temp=root;
         int minDiff;
         switch(mode)
@@ -423,8 +435,11 @@ class AvlTree{
     {
         if(root==NULL) cout<<"Error";
 
-        if(checkIfExists(key))
-        root=delete_rec(root,key);
+        if(checkIfExists(key)){
+            root=delete_rec(root,key);
+            size--;
+        }
+        
         else
         {
             cout<<"Element Not Found!";
@@ -481,13 +496,13 @@ class Ordered_Set{
     AvlTree tree;
 
     public:
-    void insert(int x)
+    void add(int x)
     {
-        if(tree.checkIfExists(x))
+        if(!tree.checkIfExists(x))
         tree.add(x);
         else
         {
-            cout<<"Duplicate element, not adding";
+            cout<<"Duplicate element, not adding "<<x<<endl;
         }
     }
     void remove(int x)
@@ -510,6 +525,10 @@ class Ordered_Set{
     {
         return tree.countInRange(low,high);
     }
+    int getSize()
+    {
+        return tree.getsize();
+    }
 
 };
 
@@ -517,7 +536,20 @@ class Ordered_Set{
 int main()
 {
     Ordered_Set set;
-
+    //int arr[]={5,2,6,8,1,9,113,3,4,11,66,6};
+    int arr[]={1,-3,3,-5,5,-15,7,2,4,9,14};
+    vector<int> keys(arr,arr+12);
+    for(int i=0;i<keys.size();i++)
+    {
+        set.add(arr[i]);
+    }
+    //set.remove(8);
+    //  for(int i=set.getSize()-1;i>=0;i--)
+    //  cout<<i+1<<" largest element is "<<set.find_kth_largest(i+1)<<endl;
+    // cout<<set.getClosest(-11)<<endl;
+    // cout<<set.checkIfExists(5);
+    cout<<"\nNo. of elements = "<<set.countInRange(-1,114);
+    cout<<"\n";
 
     return 0;
 }

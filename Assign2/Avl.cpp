@@ -292,13 +292,7 @@ int main()
 {  
 
     AvlTree tree;
-    // int arr[]={5,2,6,8,1,9,113,3,4,11,66,6};
-    // //int arr[]={1,-3,3,-5,5,-15,7,2,4,9,14};
-    // vector<int> keys(arr,arr+12);
-    // for(int i=0;i<keys.size();i++)
-    // {
-    //     tree.add(arr[i]);
-    // }
+    
   
     //tree.add(32);
     //tree.setsize();
@@ -321,12 +315,6 @@ int main()
         median=tree.find_kth_largest(tsize/2+1);
 
      cout<<median<<endl;
-    //  for(int i=keys.size()-1;i>=0;i--)
-    //  cout<<i+1<<" largest element is "<<tree.find_kth_largest(i+1)<<endl;
-    // tree.printPreOrder();
-    // cout<<tree.getClosest(11);
-    // cout<<tree.isPresent(5);
-    // cout<<"\nNo. of elements = "<<tree.countInRange(5,114);
-    // cout<<"\n";
+   
     return 0;  
 }  
