@@ -14,15 +14,15 @@ class AvlTree{
     node *root;
     int size;
 
-    int calc_size(node *nd)
-    {
-        if(!nd)
-            return 0;
-        else{
-            nd->size= 1 + calc_size(nd->left) + calc_size(nd->right);
-            return nd->size;
-        }
-    }
+    // int calc_size(node *nd)
+    // {
+    //     if(!nd)
+    //         return 0;
+    //     else{
+    //         nd->size= 1 + calc_size(nd->left) + calc_size(nd->right);
+    //         return nd->size;
+    //     }
+    // }
 
     void setHeight(node* &nd)  
     {  
@@ -60,7 +60,10 @@ class AvlTree{
             // Update heights  
             setHeight(grand_parent); 
             setHeight(parent); 
+            grand_parent->size-=parent->size;
+            parent->size+=grand_parent->size;
         }
+            
         else
         {
             return grand_parent;
@@ -88,6 +91,13 @@ class AvlTree{
             // Update heights  
             setHeight(grand_parent); 
             setHeight(parent); 
+
+            //update sizes
+
+            grand_parent->size-=parent->size;
+            parent->size+=grand_parent->size;
+
+
         }
         else
         {
@@ -184,17 +194,21 @@ class AvlTree{
     node* insert_rec(node* nd, int key)  
     {  
         //if tree is empty on nd
-        if (nd == NULL) 
+        if (nd == NULL) {
+            size++;
             return newnode(key);
+        }
      
         else if (key < nd->key)  
         {
             nd->left = insert_rec(nd->left, key);
+            nd->size++;
         }
               
-        else  //assuming no duplicates
+        else { 
             nd->right = insert_rec(nd->right, key);  
-      
+            nd->size++;
+        }
         // update height of this node 
         setHeight(nd);
         //perform balancing
@@ -222,7 +236,7 @@ class AvlTree{
             {
                 free(nd);
                 nd=NULL;
-                calc_size(nd);
+                //calc_size(nd);
                 return NULL;
             }
             //if only right child exists
@@ -255,7 +269,7 @@ class AvlTree{
         setHeight(nd);
         //perform balancing
         nd=balanceAtNode(nd,key); 
-        calc_size(nd);
+        //calc_size(nd);
         return nd;
     }
 
@@ -286,7 +300,7 @@ class AvlTree{
     {  
         if(nd != NULL)  
         {  
-            cout << nd->key << " ";  
+            cout << nd->size << " ";  
             preOrder(nd->left);  
             preOrder(nd->right);  
         }  
@@ -309,23 +323,31 @@ class AvlTree{
                 minDiff=__INT_MAX__;
                 break;
             }
-            case 2:
+            case -1:
             {
                 minDiff=-1*__INT_MAX__;
             }
         }
         while(temp!=NULL)
         {
-            if(temp->left && key<=temp->key)
+            if(temp->left && key<temp->key)
             {
                 temp=temp->left;
             }   
-            else if(temp->right && key>=temp->key)
+            else if(temp->right && key>temp->key)
             {
                 temp=temp->right;
             }
-            else{// leaf
+            
+            else if(key==temp->key){
+                return 0;
                 break;
+            }
+            else{ //leaf
+                if(abs(minDiff)>abs(temp->key - key))
+                    minDiff=temp->key-key;
+
+                return minDiff;
             }
             if(mode==0){
                 if(abs(minDiff)>abs(temp->key-key))
@@ -362,18 +384,21 @@ class AvlTree{
             return 1 +countZeroToN(nd->right,key);
         }
             
-        else{
-            return 1;
+        else{   //found element
+            if(nd->left)
+                return 1+nd->left->size;
+            else
+                return 1;
+            
         }
     }
     int countBetweenElements(int e1,int e2)
     {
-        this->setsize();
+        //this->setsize();
 
         // for calculating no. of elements between 0 and e1 and e2
         int c1=countZeroToN(root,e1);
         int c2=countZeroToN(root,e2);
-        cout<<"c1:"<<c1<<" c2:"<<c2<<endl;
         //result should be numbers between them , so..
         return c2-c1+1;
     }
@@ -386,6 +411,7 @@ class AvlTree{
 
     AvlTree(){
         root=NULL;
+        size=0;
     }
 
     void add(int key)
@@ -409,21 +435,16 @@ class AvlTree{
     int find_kth_largest(int k)
     {
         if(k<1 || k>size){
-        cout<<"Input out of range";
+        cout<<"Input out of range"<<size;
         return -1;
         }
         else
         return find_k(root,k);
     }
     
-    void setsize()
-    {
-        root->size=calc_size(root);
-        this->size=root->size;
-    }
     int getsize()
     {
-        setsize();
+        //setsize();
         return this->size;
     }
    
@@ -449,7 +470,7 @@ class AvlTree{
     int countInRange(int low,int high)
     {
         int diff1= findMinDiff(low ,1);       //lower bound
-        int diff2= findMinDiff(high,-1);       //via +ve difference
+        int diff2= findMinDiff(high,-1);      //upper bound
         int val1=low+diff1;
         int val2=high+diff2;
         return countBetweenElements(val1,val2);
