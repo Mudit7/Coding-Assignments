@@ -14,20 +14,21 @@ ll buildSumTree(ll arr[], ll *segment_tree, ll arr_start, ll arr_end, ll segment
         buildSumTree(arr, segment_tree, mid+1, arr_end, segment_index*2+2);
     return segment_tree[segment_index];
 }
- 
-void updateSegmentSumQuery(ll *segment_tree, ll segment_left, ll segment_right, ll i, ll diff, ll curr_index){
+
+void updateSegmentSumQuery(ll *segment_tree, ll segment_left, ll segment_right, ll index, ll diff, ll curr_index){
     
-    if (i < segment_left || i > segment_right)  
-        return;  
-  
-    segment_tree[curr_index] = segment_tree[curr_index] + diff;  
+    if (index < segment_left || index > segment_right)  
+        return;
+
+    segment_tree[curr_index] = segment_tree[curr_index] + diff;
     if (segment_left != segment_right)  
-    {  
+    {
         ll mid = segment_left+(segment_right-segment_left)/2;
-        updateSegmentSumQuery(segment_tree, segment_left, mid, i, diff, 2*curr_index + 1);  
-        updateSegmentSumQuery(segment_tree, mid+1, segment_right, i, diff, 2*curr_index + 2);  
-    } 
+        updateSegmentSumQuery(segment_tree, segment_left, mid, index, diff, 2*curr_index + 1);
+        updateSegmentSumQuery(segment_tree, mid+1, segment_right, index, diff, 2*curr_index + 2);
+    }
 }
+
 ll sumSegmentQuery(ll *segment_tree, ll lindex, ll rindex, ll segment_left, ll segment_right, ll curr_index){
     if( lindex <= segment_left && rindex >= segment_right ){
         return segment_tree[curr_index];
@@ -63,7 +64,7 @@ void RangeSum(ll arr[], ll n){
             
             if (index < 0 || index > n-1)  
             {  
-                cout<<"Invalid Input";  
+                cout<<"Invalid Input";
                 return;  
             }  
         
@@ -81,14 +82,14 @@ void RangeSum(ll arr[], ll n){
             cout<<sumSegmentQuery(segment_tree, lindex, rindex, 0, n-1, 0)<<endl;
         }
     }
- 
+
  
 }
 void RangeMin(ll arr[], ll n){
- 
+
 }
 void RangeMax(ll arr[], ll n){
- 
+
 }
 int main(){
  
@@ -103,8 +104,8 @@ int main(){
         cin>>arr[i];
     }
     int ch;
-    cout<<"Enter choice which type of segment tree you want:"<<endl;
-    cout<<"1. Range Sum\n2. Range Minimum\n3. Range Maximum"<<endl;
+    cout<<"Enter choice which type of segment tree you want:\n";
+    cout<<"1. Range Sum\n2. Range Minimum\n3. Range Maximum\n";
     cin>>ch;
     switch(ch){
         case 1: RangeSum(arr, n);
