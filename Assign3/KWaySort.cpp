@@ -201,10 +201,10 @@ int main(int argc,char* argv[])
     ll filesize=getFileSize(input_file);
     if(filesize<pow(10,3))
         chunkSize=filesize;
-    if(filesize>pow(10,6))
-        chunkSize=pow(10,5);
-    if(filesize>pow(10,9))
-        chunkSize=pow(10,8);
+    if(filesize>pow(10,5))
+        chunkSize=pow(10,4);
+    if(filesize>pow(10,7))
+        chunkSize=pow(10,6);
 
     k=filesize/chunkSize;
     //ll chunkSize=filesize/k;  
@@ -233,7 +233,6 @@ int main(int argc,char* argv[])
         storeInFiles(unsorted_chunk,i);
     }
     mergeKSortedFile(output_file,k);
-
 
     return 0;
 }
